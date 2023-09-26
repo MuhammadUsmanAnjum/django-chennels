@@ -1,4 +1,4 @@
-from channels.consumer import SyncConsumer
+from channels.consumer import SyncConsumer, StopConsumer
 
 class MySyncConsumer(SyncConsumer):
     
@@ -10,6 +10,11 @@ class MySyncConsumer(SyncConsumer):
         
     def websocket_disconnect(self, event):
         print("Disconnect")
+        raise StopConsumer()
         
     def websocket_receive(self, event):
-        print("recieve")
+        print("recieve ->", event['text'])
+        self.send({
+            'type':'websocket.send',
+            'text':"hello world"
+        })
