@@ -3,5 +3,5 @@ from .consumer import MySyncConsumer
 
 
 ws_urlpatterns = [
-    path('ws/test/', MySyncConsumer.as_asgi())
+    path('ws/test/<str:name>/', MySyncConsumer.as_asgi())
 ]

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Example</title>
+  </head>
+  <body>
+    <h1>WebSocket Example</h1>
+
+    <label for="messageInput">Enter Message:</label>
+    <input type="text" id="messageInput" />
+    <button onclick="sendMessage()">Send Message</button>
+
+    <hr />
+
+    <h2>Received Message:</h2>
+    <div id="receivedMessage"></div>
+
+    <script>
+      // Create a WebSocket object
+      const name = "{{ name }}";
+
+      const socket = new WebSocket(`ws://127.0.0.1:8000/ws/test/${name}/`); // Replace 'your-server-url' with the actual server URL
+
+      // Event handler for successful connections
+      socket.addEventListener("open", (event) => {
+        console.log("WebSocket connection opened:", event);
+      });
+
+      // Event handler for incoming messages
+      socket.addEventListener("message", (event) => {
+        const receivedMessage = document.getElementById("receivedMessage");
+        receivedMessage.innerHTML = `<p>${event.data}</p>`;
+      });
+
+      // Event handler for errors
+      socket.addEventListener("error", (event) => {
+        console.error("WebSocket error:", event);
+      });
+
+      // Function to send a message to the server
+      function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value;
+
+        // Check if the WebSocket is open before sending the message
+        if (socket.readyState === WebSocket.OPEN) {
+          // Send the message to the server
+          socket.send(message);
+        } else {
+          console.error("WebSocket is not open.");
+        }
+      }
+    </script>
+  </body>
+</html>
