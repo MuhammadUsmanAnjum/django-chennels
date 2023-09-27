@@ -21,10 +21,19 @@ class MySyncConsumer(SyncConsumer):
 
 
     def websocket_receive(self, event):
-        async_to_sync(self.channel_layer.group_send)(self.name, {
-            'type': 'chat.message',
-            'message': event['text']
-        })
+        if self.scope['user'].is_authenticated:
+            group = Group.objects.get(name=self.name)
+            chat = Message(content=event['text'], group=group)
+            chat.save()
+            async_to_sync(self.channel_layer.group_send)(self.name, {
+                'type': 'chat.message',
+                'message': event['text']
+            })
+        else:
+            self.send({
+                'type':'websocket.send',
+                'text':"Login Required!"
+            })
 
     def chat_message(self, event):
         self.send({
@@ -32,7 +41,5 @@ class MySyncConsumer(SyncConsumer):
             'text': event['message']
         })
         
-        group = Group.objects.get(name=self.name)
-        chat = Message(content=event['message'], group=group)
-        chat.save()
+        
     
