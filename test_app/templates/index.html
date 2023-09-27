@@ -4,6 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebSocket Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      #messageInput {
+        width: 70%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        padding: 8px 12px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      hr {
+        border: 1px solid #ddd;
+      }
+
+      #receivedMessage {
+        margin-top: 10px;
+      }
+
+      p {
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 5px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
   </head>
   <body>
     <h1>WebSocket Example</h1>
@@ -15,7 +67,11 @@
     <hr />
 
     <h2>Received Message:</h2>
-    <div id="receivedMessage"></div>
+    <div id="receivedMessage">
+      {% for msg in messages %}
+      <p>{{msg.content}}</p>
+      {% endfor %}
+    </div>
 
     <script>
       // Create a WebSocket object
@@ -31,7 +87,7 @@
       // Event handler for incoming messages
       socket.addEventListener("message", (event) => {
         const receivedMessage = document.getElementById("receivedMessage");
-        receivedMessage.innerHTML = `<p>${event.data}</p>`;
+        receivedMessage.innerHTML += `<p>${event.data}</p>`;
       });
 
       // Event handler for errors

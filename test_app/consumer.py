@@ -1,6 +1,6 @@
 from channels.consumer import SyncConsumer, StopConsumer
 from asgiref.sync import async_to_sync
-
+from .models import Message, Group
 class MySyncConsumer(SyncConsumer):
 
     def websocket_connect(self, event):
@@ -31,3 +31,8 @@ class MySyncConsumer(SyncConsumer):
             'type': 'websocket.send',
             'text': event['message']
         })
+        
+        group = Group.objects.get(name=self.name)
+        chat = Message(content=event['message'], group=group)
+        chat.save()
+    
